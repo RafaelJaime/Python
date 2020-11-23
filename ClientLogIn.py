@@ -8,7 +8,7 @@ control if exist active user
 # Se establece la conexion
 s = socket.socket()
 # conexion al localhost y puerto
-s.connect(("localhost", 9992))
+s.connect(("localhost", 9993))
 
 seguir = True
 notEmail = True

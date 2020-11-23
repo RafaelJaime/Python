@@ -3,7 +3,7 @@ version 1.0.1
 control if exist active user
 """
 
-from threading import Thread
+from threading import Thread, Lock
 import socket
 
 # you can write registered users file
@@ -11,8 +11,6 @@ def writeUsers(user,file):
     file = open(file, "a")
     file.write(user + "\n")
     file.close()
-
-
 
 # you can read registered users file o Users Actives if
 # exits return true
@@ -24,7 +22,6 @@ def readUsers(user, file):
                 cont += 1
         if cont > 0:
             return True
-
 
 # you can write registered user in active users
 def activeUsers(user, file):
@@ -64,7 +61,7 @@ class Cliente(Thread):
         fActive = "activeUsers.txt"
         fRegist = "registeredUsers.txt"
         seguir = True
-        mutex = threading.Lock()
+        mutex = Lock()
         while seguir:
             user = self.socket.recv(1000).decode()
             self.socket.send("hello, welcome to the server".encode())
@@ -102,7 +99,7 @@ class Cliente(Thread):
          
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server.bind(("", 9992))
+server.bind(("", 9993))
 server.listen(1)
 codigo_cliente = 1
 # bucle para atender clientes
@@ -114,4 +111,3 @@ while 1:
     hilo = Cliente(socket_cliente, datos_cliente, codigo_cliente)
     hilo.start()
     codigo_cliente += 1
-
