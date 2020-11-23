@@ -77,7 +77,6 @@ class Cliente(Thread):
                 mutex.release()
                 if isActive:
                     self.socket.send("Your User was registered\n and your User was active ".encode())
-                    self.socket.send("adios")
                 else:
                     print("estaba registrado no activo")
                     #user was registered and now we active
@@ -85,7 +84,6 @@ class Cliente(Thread):
                     activeUsers(user,fActive)
                     mutex.release()
                     self.socket.send("Your User was registered\n and now your User is active ".encode())
-                    self.socket.send("adios")
             #if user is not registered
             else:
                 mutex.acquire()
@@ -95,7 +93,8 @@ class Cliente(Thread):
                 activeUsers(user,fActive)
                 mutex.release()
                 self.socket.send("your user has been registered and is now active".encode())
-                self.socket.send("adios")
+            seguir=False
+            self.socket.send("adios".encode())
          
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
