@@ -30,5 +30,4 @@ npm-debug.log*
 /plugins
 /www
 
-activeUsers.txt
-registeredUsers.txt
+*.txt
