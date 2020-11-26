@@ -217,13 +217,13 @@ class Cliente(Thread):
                                 if(cont > 3):
                                     random.shuffle(respuestas)
                                     mensaje+=str(1)+") " +respuestas[0] + "\n" + str(2)+") " +respuestas[1] + "\n" + str(3)+") " +respuestas[2] + "\n"
-                                    self.socket.send(mensaje.encode())
                                     for i in range(3):
                                         cont2 += 1
                                     if(cont2 > 3):
                                         opcion = 0
                                         while(opcion < 1 or opcion > 3):
-                                            self.socket.send("Choose one, 1, 2 o 3: ".encode())
+                                            mensaje+="Choose one, 1, 2 o 3: "
+                                            self.socket.send(mensaje.encode())
                                             opcion = int(self.socket.recv(1000).decode())
                                         if(opcion == 1):
                                             if(respuestas[0] == correcta):
