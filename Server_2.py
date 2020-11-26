@@ -1,6 +1,7 @@
 import threading
 from threading import Thread
 import socket
+import random
 
 # Read and write new group
 Factive = "archivos/activeUsers.txt"
@@ -10,6 +11,51 @@ mutexGroups = threading.Lock()
 mutexRegist = threading.Lock()
 mutexActive = threading.Lock()
 
+
+def test(self):
+    global Ftest, mutexTest
+    respuestas = []
+    pregunta = 1
+    cont = 1
+    cont2 = 1
+    puntuacion = 0
+    with open(Ftest, "r+") as f:
+        for linea in f:
+            if(pregunta == 1 or pregunta == 5 or pregunta == 9 or pregunta == 13 or pregunta == 17 or pregunta == 21 or pregunta == 25 or pregunta == 29 or pregunta == 33 or pregunta == 37):
+                respuestas = []
+                self.socket.send("----------------------------".encode())
+                linea = linea.replace('*', '')
+                self.socket.send(linea.encode())
+            else:
+                linea = linea.replace('+', '')
+                respuestas.append(linea)
+                if(pregunta == 2 or pregunta == 6 or pregunta == 10 or pregunta == 14 or pregunta == 18 or pregunta == 22 or pregunta == 26 or pregunta == 30 or pregunta == 34 or pregunta == 38):
+                    correcta = linea
+                cont += 1
+                if(cont > 3):
+                    random.shuffle(respuestas)
+                    for i in range(3):
+                        self.socket.send((str(i+1)+") " +
+                                          respuestas[i]).encode())
+                        cont2 += 1
+                    if(cont2 > 3):
+                        opcion = 0
+                        while(opcion < 1 or opcion > 3):
+                            self.socket.send("Choose one, 1, 2 o 3: ".encode())
+                            opcion = int(self.socket.recv(1000).decode())
+                        if(opcion == 1):
+                            if(respuestas[0] == correcta):
+                                puntuacion += 1
+                        if(opcion == 2):
+                            if(respuestas[1] == correcta):
+                                puntuacion += 1
+                        if(opcion == 3):
+                            if(respuestas[2] == correcta):
+                                puntuacion += 1
+                        cont2 = 1
+                    cont = 1
+            pregunta += 1
+    self.socket.send(("Has obtenido " + str(puntuacion)+" puntos").encode())
 
 # Metodo que recibe el nombre del grupo y sus 3 usuarios, devuelve true si lo crea y false si ya existe
 def newGroup(name, usuario1, usuario2, usuario3):
