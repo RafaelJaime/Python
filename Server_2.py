@@ -14,54 +14,10 @@ mutexActive = threading.Lock()
 mutexTest = threading.Lock()
 
 
-def test(self):
-    global Ftest, mutexTest
-    respuestas = []
-    pregunta = 1
-    cont = 1
-    cont2 = 1
-    puntuacion = 0
-    with open(Ftest, "r+") as f:
-        for linea in f:
-            if(pregunta == 1 or pregunta == 5 or pregunta == 9 or pregunta == 13 or pregunta == 17 or pregunta == 21 or pregunta == 25 or pregunta == 29 or pregunta == 33 or pregunta == 37):
-                respuestas = []
-                self.socket.send("----------------------------".encode())
-                linea = linea.replace('*', '')
-                self.socket.send(linea.encode())
-            else:
-                linea = linea.replace('+', '')
-                respuestas.append(linea)
-                if(pregunta == 2 or pregunta == 6 or pregunta == 10 or pregunta == 14 or pregunta == 18 or pregunta == 22 or pregunta == 26 or pregunta == 30 or pregunta == 34 or pregunta == 38):
-                    correcta = linea
-                cont += 1
-                if(cont > 3):
-                    random.shuffle(respuestas)
-                    for i in range(3):
-                        self.socket.send((str(i+1)+") " +
-                                          respuestas[i]).encode())
-                        cont2 += 1
-                    if(cont2 > 3):
-                        opcion = 0
-                        while(opcion < 1 or opcion > 3):
-                            self.socket.send("Choose one, 1, 2 o 3: ".encode())
-                            opcion = int(self.socket.recv(1000).decode())
-                        if(opcion == 1):
-                            if(respuestas[0] == correcta):
-                                puntuacion += 1
-                        if(opcion == 2):
-                            if(respuestas[1] == correcta):
-                                puntuacion += 1
-                        if(opcion == 3):
-                            if(respuestas[2] == correcta):
-                                puntuacion += 1
-                        cont2 = 1
-                    cont = 1
-            pregunta += 1
-    self.socket.send(("Has obtenido " + str(puntuacion)+" puntos").encode())
+
+
 
 # Metodo que recibe el nombre del grupo y sus 3 usuarios, devuelve true si lo crea y false si ya existe
-
-
 def newGroup(name, usuario1, usuario2, usuario3):
     global Fgroups, Factive
     cont = 0
@@ -73,7 +29,7 @@ def newGroup(name, usuario1, usuario2, usuario3):
             return False
         else:
             mutexActive.acquire()
-            if(readUsers(Factive, usuario1) and readUsers(Factive, usuario2) and readUsers(Factive, usuario3)):
+            if(readUsers(usuario1, Factive) and readUsers(usuario2, Factive) and readUsers(usuario3, Factive)):
                 file = open(Fgroups, "a")
                 file.write(name + ";" + usuario1 + ";" +
                            usuario2 + ";" + usuario3)
@@ -133,6 +89,52 @@ class Cliente(Thread):
         self.socket = socket_cliente
         self.datos = datos_cliente
         self.codigo = codigo_cliente
+
+    def test(self):
+        global Ftest, mutexTest
+        respuestas = []
+        pregunta = 1
+        cont = 1
+        cont2 = 1
+        puntuacion = 0
+        with open(Ftest, "r+") as f:
+            for linea in f:
+                if(pregunta == 1 or pregunta == 5 or pregunta == 9 or pregunta == 13 or pregunta == 17 or pregunta == 21 or pregunta == 25 or pregunta == 29 or pregunta == 33 or pregunta == 37):
+                    respuestas = []
+                    self.socket.send("----------------------------".encode())
+                    linea = linea.replace('*', '')
+                    self.socket.send(linea.encode())
+                else:
+                    linea = linea.replace('+', '')
+                    respuestas.append(linea)
+                    if(pregunta == 2 or pregunta == 6 or pregunta == 10 or pregunta == 14 or pregunta == 18 or pregunta == 22 or pregunta == 26 or pregunta == 30 or pregunta == 34 or pregunta == 38):
+                        correcta = linea
+                    cont += 1
+                    if(cont > 3):
+                        random.shuffle(respuestas)
+                        for i in range(3):
+                            self.socket.send((str(i+1)+") " +
+                                            respuestas[i]).encode())
+                            cont2 += 1
+                        if(cont2 > 3):
+                            opcion = 0
+                            while(opcion < 1 or opcion > 3):
+                                self.socket.send("Choose one, 1, 2 o 3: ".encode())
+                                opcion = int(self.socket.recv(1000).decode())
+                            if(opcion == 1):
+                                if(respuestas[0] == correcta):
+                                    puntuacion += 1
+                            if(opcion == 2):
+                                if(respuestas[1] == correcta):
+                                    puntuacion += 1
+                            if(opcion == 3):
+                                if(respuestas[2] == correcta):
+                                    puntuacion += 1
+                            cont2 = 1
+                        cont = 1
+                pregunta += 1
+        self.socket.send(("Has obtenido " + str(puntuacion)+" puntos").encode())
+
     def run(self):
         global Fregist, Factive
         seguir = False
@@ -180,23 +182,65 @@ class Cliente(Thread):
                 answer = int(self.socket.recv(1000).decode())
             if(answer == 1):
                 print("Esta viendo competiciones")
-            elif answer == 2:
-                self.socket.send("Write the name of the group: ")
-                groupName = int(self.socket.recv(1000).decode())
-                self.socket.send("Write the name a member of the group: ")
-                user2 = int(self.socket.recv(1000).decode())
-                self.socket.send("Write the name of the last member of the group: ")
-                user3 = int(self.socket.recv(1000).decode())
+            elif (answer == 2):
+                self.socket.send("Write the name of the group: ".encode())
+                groupName = self.socket.recv(1000).decode()
+                self.socket.send("Write the name a member of the group: ".encode())
+                user2 = self.socket.recv(1000).decode()
+                self.socket.send("Write the name of the last member of the group: ".encode())
+                user3 = self.socket.recv(1000).decode()
                 if(newGroup(groupName, user, user2, user3)):
                     ready = False
                     while(ready != True):
-                        self.socket.send("Ready start with the test (yes or not): ")
-                        answer = int(self.socket.recv(1000).decode())
+                        self.socket.send("Ready to start with the test (yes or not): ".encode())
+                        answer = self.socket.recv(1000).decode()
                         if answer=="yes":
                             ready=True
+                    global Ftest, mutexTest
+                    respuestas = []
+                    pregunta = 1
+                    cont = 1
+                    cont2 = 1
+                    puntuacion = 0
+                    with open(Ftest, "r+") as f:
+                        for linea in f:
+                            if(pregunta == 1 or pregunta == 5 or pregunta == 9 or pregunta == 13 or pregunta == 17 or pregunta == 21 or pregunta == 25 or pregunta == 29 or pregunta == 33 or pregunta == 37):
+                                respuestas = []
+                                linea = linea.replace('*', '')
+                                mensaje="----------------------------\n" + linea +"\n"
+                            else:
+                                linea = linea.replace('+', '')
+                                respuestas.append(linea)
+                                if(pregunta == 2 or pregunta == 6 or pregunta == 10 or pregunta == 14 or pregunta == 18 or pregunta == 22 or pregunta == 26 or pregunta == 30 or pregunta == 34 or pregunta == 38):
+                                    correcta = linea
+                                cont += 1
+                                if(cont > 3):
+                                    random.shuffle(respuestas)
+                                    mensaje+=str(1)+") " +respuestas[0] + "\n" + str(2)+") " +respuestas[1] + "\n" + str(3)+") " +respuestas[2] + "\n"
+                                    self.socket.send(mensaje.encode())
+                                    for i in range(3):
+                                        cont2 += 1
+                                    if(cont2 > 3):
+                                        opcion = 0
+                                        while(opcion < 1 or opcion > 3):
+                                            self.socket.send("Choose one, 1, 2 o 3: ".encode())
+                                            opcion = int(self.socket.recv(1000).decode())
+                                        if(opcion == 1):
+                                            if(respuestas[0] == correcta):
+                                                puntuacion += 1
+                                        if(opcion == 2):
+                                            if(respuestas[1] == correcta):
+                                                puntuacion += 1
+                                        if(opcion == 3):
+                                            if(respuestas[2] == correcta):
+                                                puntuacion += 1
+                                        cont2 = 1
+                                    cont = 1
+                            pregunta += 1
+                    self.socket.send(("Has obtenido " + str(puntuacion)+" puntos").encode())
                 else:
-                    self.socket.send("Your group is wrong")
-            elif answer == 3:
+                    self.socket.send("Your group is wrong".encode())
+            elif (answer == 3):
                 mutexActive.acquire()
                 deleteActiveUsers(user, Factive)
                 mutexActive.release()
