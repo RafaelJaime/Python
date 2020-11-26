@@ -7,9 +7,11 @@ import random
 Factive = "archivos/activeUsers.txt"
 Fregist = "archivos/registeredUsers.txt"
 Fgroups = "archivos/grupos.txt"
+Ftest = "archivos/test.txt"
 mutexGroups = threading.Lock()
 mutexRegist = threading.Lock()
 mutexActive = threading.Lock()
+mutexTest = threading.Lock()
 
 
 def test(self):
@@ -58,6 +60,8 @@ def test(self):
     self.socket.send(("Has obtenido " + str(puntuacion)+" puntos").encode())
 
 # Metodo que recibe el nombre del grupo y sus 3 usuarios, devuelve true si lo crea y false si ya existe
+
+
 def newGroup(name, usuario1, usuario2, usuario3):
     global Fgroups, Factive
     cont = 0
@@ -129,17 +133,16 @@ class Cliente(Thread):
         self.socket = socket_cliente
         self.datos = datos_cliente
         self.codigo = codigo_cliente
-
     def run(self):
-        seguir = True
-        global menclient, Fregist, Factive
+        global Fregist, Factive
+        seguir = False
         acceder = False
+        user = ""
+        message= ""
         # Comprobar si el usuario esta registrado
         while(seguir != True):
-            self.socket.send("Enter your email: ")
-            user = self.socket.recv(1000).decode()
             while(user.find('@') == -1):
-                self.socket.send("Enter correct email with @ ".encode())
+                self.socket.send(message.encode() + "\nEnter correct email with @ ".encode())
                 user = self.socket.recv(1000).decode()
             mutexRegist.acquire()
             isregist = readUsers(user, Fregist)
@@ -149,15 +152,14 @@ class Cliente(Thread):
                 isActive = readUsers(user, Factive)
                 mutexActive.release()
                 if isActive:
-                    self.socket.send(
-                        "Your User was registered\n and your User was active ".encode())
+                    message = "Your User was registered and is currently active, please select other name."
+                    user = ""
                 else:
-                    print("estaba registrado no activo")
                     mutexActive.acquire()
                     activeUsers(user, Factive)
                     mutexActive.release()
-                    self.socket.send(
-                        "Your User was registered\n and now your User is active ".encode())
+                    message = "Your User was registered and and now is active."
+                    seguir = True
             else:
                 mutexRegist.acquire()
                 writeUsers(user, Fregist)
@@ -165,29 +167,46 @@ class Cliente(Thread):
                 mutexActive.acquire()
                 activeUsers(user, Factive)
                 mutexActive.release()
-                self.socket.send(
-                    "your user has been registered and is now active".encode())
-            acceder = True
-            seguir = False
+                message = "Your user has been registered and is now active"
+                seguir = True
+
+        print("Nuevo usuario en el sistema:  " + user)
         while(acceder != True):
             answer = 0
-            while(answer > 3 or answer < 1):
-                self.socket.send(
-                    "Type: \n\t1.- View competitions\n\t2.- Create a group\n\t3.-Logout".encode())
+            while(answer > 3 or answer < 1 or answer==""):
+                self.socket.send(message.encode() + 
+                    "\nWrite: \n\t1.- View competitions\n\t2.- Create a group\n\t3.-Logout".encode())
+                message=""
                 answer = int(self.socket.recv(1000).decode())
             if(answer == 1):
                 print("Esta viendo competiciones")
             elif answer == 2:
-                print("esta creando un grupo")
+                self.socket.send("Write the name of the group: ")
+                groupName = int(self.socket.recv(1000).decode())
+                self.socket.send("Write the name a member of the group: ")
+                user2 = int(self.socket.recv(1000).decode())
+                self.socket.send("Write the name of the last member of the group: ")
+                user3 = int(self.socket.recv(1000).decode())
+                if(newGroup(groupName, user, user2, user3)):
+                    ready = False
+                    while(ready != True):
+                        self.socket.send("Ready start with the test (yes or not): ")
+                        answer = int(self.socket.recv(1000).decode())
+                        if answer=="yes":
+                            ready=True
+                else:
+                    self.socket.send("Your group is wrong")
             elif answer == 3:
                 mutexActive.acquire()
                 deleteActiveUsers(user, Factive)
                 mutexActive.release()
                 self.socket.send("your user is not now active".encode())
+                self.socket.close()
+                break
 
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server.bind(("", 9992))
+server.bind(("", 9993))
 server.listen(1)
 codigo_cliente = 1
 if __name__ == '__main__':
