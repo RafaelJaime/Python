@@ -1,10 +1,39 @@
 A la aceleración
+A la masa
+A la velocidad
+
 Describe un movimiento uniforme
+No describe ningun movimiento
+Movimiento uniformemente acelerado
+
 Ganas más peso al ir más rápido
+Pierdes peso al ir más rapido
+No ganas ni pierdes peso
+
 Plantea que la energía no se crea ni se destruye, en cambio, se conserva
-La materia oscura
+Plantea el desequilibrio de los sistemas mediante la entropía
+Todo cuerpo tiende a equilibrar su temperatura conforme a otros cuerpos
+
+Materia oscura
+Materia gris
+Antimateria
+
 Fotones
+Neutrinos
+Electrones
+
 Carga negativa
+Carga positiva
+Carga neutra (no poseen carga)
+
 Por la centrifugación
-El Kelvin (K)
+Por la fuerza centrípeta
+Por el movimiento del detergente
+
+Kelvin (K)
+Celsius (C)
+Fahrenheit (F)
+
 No, según esta teoría los periodos de tiempo son relativos. Yo tengo uno, tú tienes otro y alguien en un planeta de otra galaxia tiene otro
+Si, según esta teoría los periodos de tiempo son absolutos. Todos tenemos el mismo
+El tiempo no existe, es una invención del hombre
