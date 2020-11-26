@@ -1,39 +1,49 @@
-A la aceleración
+Según la Segunda Ley de Newton, ¿a qué es proporcional la fuerza?*
+A la aceleración+
 A la masa
 A la velocidad
 
-Describe un movimiento uniforme
+¿Qué clase de movimiento describe un cuerpo sometido a ninguna fuerza?*
+Describe un movimiento uniforme+
 No describe ningun movimiento
 Movimiento uniformemente acelerado
 
-Ganas más peso al ir más rápido
+¿Cuanto más rápido te mueves ganas más peso o menos peso?*
+Ganas más peso al ir más rápido+
 Pierdes peso al ir más rapido
 No ganas ni pierdes peso
 
-Plantea que la energía no se crea ni se destruye, en cambio, se conserva
+¿Qué plantea la primera ley de la termodinámica?*
+Plantea que la energía no se crea ni se destruye, en cambio, se conserva+
 Plantea el desequilibrio de los sistemas mediante la entropía
 Todo cuerpo tiende a equilibrar su temperatura conforme a otros cuerpos
 
-Materia oscura
+¿Cómo se llama el tipo de materia que no emite ningún tipo de radiación electromagnética?*
+Materia oscura+
 Materia gris
 Antimateria
 
-Fotones
+¿Cómo se llaman las partículas elementales sin masa que componen la luz?*
+Fotones+
 Neutrinos
 Electrones
 
-Carga negativa
+¿Qué carga tienen los electrones?*
+Carga negativa+
 Carga positiva
 Carga neutra (no poseen carga)
 
-Por la centrifugación
+¿Por qué principio físico funciona una lavadora?*
+Por la centrifugación+
 Por la fuerza centrípeta
 Por el movimiento del detergente
 
-Kelvin (K)
+¿Cuál es la unidad de temperatura en el sistema internacional de unidades?*
+Kelvin (K)+
 Celsius (C)
 Fahrenheit (F)
 
-No, según esta teoría los periodos de tiempo son relativos. Yo tengo uno, tú tienes otro y alguien en un planeta de otra galaxia tiene otro
+¿De acuerdo a la teoría especial de la relatividad, existen el presente, pasado y futuro?*
+No, según esta teoría los periodos de tiempo son relativos. Yo tengo uno, tú tienes otro y alguien en un planeta de otra galaxia tiene otro+
 Si, según esta teoría los periodos de tiempo son absolutos. Todos tenemos el mismo
 El tiempo no existe, es una invención del hombre
