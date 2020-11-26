@@ -6,6 +6,26 @@ import socket
 user para guardar el correo del usuario
 """
 
+# Read and write new group
+Fgrupos = "archivos/grupos.txt"
+mutexGrupos = threading.Lock()
+
+# Metodo que recibe el nombre del grupo y sus 3 usuarios, devuelve true si lo crea y false si ya existe
+def newGroup(name, usuario1, usuario2, usuario3):
+    global Fgrupos, mutexGrupos
+    cont = 0
+    with open(Fgrupos, "r+") as f:
+        for linea in f:
+            if name in linea:
+                cont +=1
+        if cont>0:
+            return False
+        else:
+            file = open(Fgrupos, "a")
+            file.write(name +  ";" + usuario1 +  ";" + usuario2 +  ";" + usuario3)
+            return True
+
+
 
 # you can write registered users file
 def writeUsers(user,file):
@@ -64,11 +84,11 @@ class Cliente(Thread):
         # variables
         fActive = "activeUsers.txt"
         fRegist = "registeredUsers.txt"
-        seguir = " "
+        seguir = True
         global menclient
         mutex = threading.Lock()
 
-        while (seguir!="c"):
+        while (seguir!=True):
             menclient = self.socket.recv(1000).decode()
 
             if(menclient=="I"):
